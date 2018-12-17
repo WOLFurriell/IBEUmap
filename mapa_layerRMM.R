@@ -2,7 +2,7 @@ rm(list = ls())
 
 #=========================================================================
 #= ibeu MAPA  ============================================================ 
-#========================================================================
+#=========================================================================
 library(ggmap); library(ggplot2); library(dplyr); library(rgdal); 
 library(gridExtra); library(dplyr); library(lattice)
 library(sp);library(classInt); library(broom);library(tidyr)
@@ -15,11 +15,11 @@ library(webshot)
 # importando o shape --------------------------------------------------
 
 library(raster)
-shape <- shapefile("E:/Observatório 2018/Shapes/shapeRMMCenso2010PorAeds2/41SEE250GC_RMM.shp")
+shape <- shapefile("E:/ObservatÃ³rio 2018/Shapes/shapeRMMCenso2010PorAeds2/41SEE250GC_RMM.shp")
 
 # merge -------------------------------------------------------------------
 
-dados <- read.csv("E:/Observatório 2018/IBEU/IBEU_APOND_RMM2.csv", sep = ";", dec = ",")
+dados <- read.csv("E:/ObservatÃ³rio 2018/IBEU/IBEU_APOND_RMM2.csv", sep = ";", dec = ",")
 
 dados$Aponds    <- dados$Aponds%>%as.character()
 names(dados)[2] <- "areaPond"
@@ -44,17 +44,17 @@ labels <- sprintf(
   shapeRMM$areaPond) %>% lapply(htmltools::HTML)
 
 #-------------------------------------------------------------------------------
-# Ocorrências policiais banco RECOP - Lesão Corporal
+# OcorrÃªncias policiais banco RECOP - LesÃ£o Corporal
 
-dir             <-"E:/OBSERVATÓRIO/OBSERVATÓRIO 2016/Violência Ana/lesaopoints.csv"
+dir             <-"E:/OBSERVATÃ“RIO/OBSERVATÃ“RIO 2016/ViolÃªncia Ana/lesaopoints.csv"
 ocor            <-read.table(dir, sep=";", header = T)
 ocor$lat        <-paste0(substr(ocor$lat,1,3),".",substr(ocor$lat,4,12))
 ocor$lat        <-as.numeric(ocor$lat)
 ocor$lon        <-paste0(substr(ocor$lon,1,3),".",substr(ocor$lon,4,12))
 ocor$lon        <-as.numeric(ocor$lon)  
 ocor$ocorrencia <- ocor$ocorrencia%>%as.character()
-ocor$ocorrencia[ocor$ocorrencia == "Lesão Corporal, Maus Tratos e Tortur"] <- "Lesão Corporal"
-ocor2           <- subset(ocor, ocorrencia == "Lesão Corporal")
+ocor$ocorrencia[ocor$ocorrencia == "LesÃ£o Corporal, Maus Tratos e Tortur"] <- "LesÃ£o Corporal"
+ocor2           <- subset(ocor, ocorrencia == "LesÃ£o Corporal")
 table(ocor2$ocorrencia)
 
 ocor2$lon2 <- paste0(substr(ocor2$lon,1,3))
@@ -106,21 +106,21 @@ mapa <- leaflet() %>% addTiles() %>%
   addPolygons(data = shapeRMM, 
               fillColor = ~cutpal(D4), weight = 1, color = "white",  
               fillOpacity = 0.8, smoothFactor = 0.6,
-              group = "D4-Serviços", popup = pd4) %>% 
+              group = "D4-ServiÃ§os", popup = pd4) %>% 
   # D5
   addPolygons(data = shapeRMM, 
               fillColor = ~cutpal(D5), weight = 1, color = "white",  
               fillOpacity = 0.8, smoothFactor = 0.6,
               group = "D5-Infraestrutura", popup = pd5) %>%
-  # Ocorrências
+  # OcorrÃªncias
   addCircleMarkers(data = ocor2,
              lng = ~lon, lat = ~lat, radius = 1,
-             group = "Lesão Corporal", color = "black")%>%
+             group = "LesÃ£o Corporal", color = "black")%>%
   # Layers
   addLayersControl(
     baseGroups = c("OpenStreetMap","Positron","Stamen.Toner","WorldImagery"),
     overlayGroups = c("Apond","IBEU","D1-Mobilidade", "D2-Ambientais","D3-Habitacionais",
-                      "D4-Serviços","D5-Infraestrutura", "Lesão Corporal"),
+                      "D4-ServiÃ§os","D5-Infraestrutura", "LesÃ£o Corporal"),
     options = layersControlOptions(collapsed = F)) %>%
   #Legenda
   #addProviderTiles("CartoDB.Positron") %>% # Fixar google maps
@@ -131,6 +131,6 @@ mapa <- leaflet() %>% addTiles() %>%
             labFormat = labelFormat(prefix = "[", suffix = "]", between = ";"))
 mapa
 
-#saveWidget(mapa, "E:/Observatório 2018/IBEU/MapaIBEU/MapaWebIBEU.html")
+#saveWidget(mapa, "E:/ObservatÃ³rio 2018/IBEU/MapaIBEU/MapaWebIBEU.html")
 
 
