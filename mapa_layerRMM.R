@@ -1,8 +1,8 @@
 rm(list = ls())
 
 #=========================================================================
-#= ibeu MAPA  ============================================================ 
-#=========================================================================
+#= IBEU MAPA  ============================================================ 
+#========================================================================
 library(ggmap); library(ggplot2); library(dplyr); library(rgdal); 
 library(gridExtra); library(dplyr); library(lattice)
 library(sp);library(classInt); library(broom);library(tidyr)
@@ -15,11 +15,11 @@ library(webshot)
 # importando o shape --------------------------------------------------
 
 library(raster)
-shape <- shapefile("E:/Observat√≥rio 2018/Shapes/shapeRMMCenso2010PorAeds2/41SEE250GC_RMM.shp")
+shape <- shapefile("E:/ObservatÛrio 2018/Shapes/shapeRMMCenso2010PorAeds2/41SEE250GC_RMM.shp")
 
 # merge -------------------------------------------------------------------
 
-dados <- read.csv("E:/Observat√≥rio 2018/IBEU/IBEU_APOND_RMM2.csv", sep = ";", dec = ",")
+dados <- read.csv("E:/ObservatÛrio 2018/IBEU/IBEU_APOND_RMM2.csv", sep = ";", dec = ",")
 
 dados$Aponds    <- dados$Aponds%>%as.character()
 names(dados)[2] <- "areaPond"
@@ -44,27 +44,26 @@ labels <- sprintf(
   shapeRMM$areaPond) %>% lapply(htmltools::HTML)
 
 #-------------------------------------------------------------------------------
-# Ocorr√™ncias policiais banco RECOP - Les√£o Corporal
+# OcorrÍncias policiais banco RECOP - Les„o Corporal
 
-dir             <-"E:/OBSERVAT√ìRIO/OBSERVAT√ìRIO 2016/Viol√™ncia Ana/lesaopoints.csv"
+dir             <-"E:/OBSERVAT”RIO/OBSERVAT”RIO 2016/ViolÍncia Ana/lesaopoints.csv"
 ocor            <-read.table(dir, sep=";", header = T)
 ocor$lat        <-paste0(substr(ocor$lat,1,3),".",substr(ocor$lat,4,12))
 ocor$lat        <-as.numeric(ocor$lat)
 ocor$lon        <-paste0(substr(ocor$lon,1,3),".",substr(ocor$lon,4,12))
 ocor$lon        <-as.numeric(ocor$lon)  
 ocor$ocorrencia <- ocor$ocorrencia%>%as.character()
-ocor$ocorrencia[ocor$ocorrencia == "Les√£o Corporal, Maus Tratos e Tortur"] <- "Les√£o Corporal"
-ocor2           <- subset(ocor, ocorrencia == "Les√£o Corporal")
+ocor$ocorrencia[ocor$ocorrencia == "Les„o Corporal, Maus Tratos e Tortur"] <- "Les„o Corporal"
+ocor2           <- subset(ocor, ocorrencia == "Les„o Corporal")
 table(ocor2$ocorrencia)
 
-ocor2$lon2 <- paste0(substr(ocor2$lon,1,3))
+paste0(substr(ocor$lon,1,3))
 ocor2$lat2 <- paste0(substr(ocor2$lat,1,3))
 ocor2      <- subset(ocor2, lat2 == "-23")
-ocor2      <- subset(ocor2, lon2 == "-51" | lon2 == "-52")
 
-#----------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # O Mapa --------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
 
 mapa <- leaflet() %>% addTiles() %>% 
   # Basemap
@@ -79,7 +78,7 @@ mapa <- leaflet() %>% addTiles() %>%
               highlight = highlightOptions(
                 weight = 5, color = "black",
                 dashArray = "",  fillOpacity = 0.7, fillColor = "white", 
-                bringToFront = F), label = labels, group = "Aponds",
+                bringToFront = T), label = labels, group = "Aponds",
               labelOptions = labelOptions(noHide = F, direction = "right")) %>%
   # IBEU
   addPolygons(data = shapeRMM, 
@@ -106,21 +105,21 @@ mapa <- leaflet() %>% addTiles() %>%
   addPolygons(data = shapeRMM, 
               fillColor = ~cutpal(D4), weight = 1, color = "white",  
               fillOpacity = 0.8, smoothFactor = 0.6,
-              group = "D4-Servi√ßos", popup = pd4) %>% 
+              group = "D4-ServiÁos", popup = pd4) %>% 
   # D5
   addPolygons(data = shapeRMM, 
               fillColor = ~cutpal(D5), weight = 1, color = "white",  
               fillOpacity = 0.8, smoothFactor = 0.6,
               group = "D5-Infraestrutura", popup = pd5) %>%
-  # Ocorr√™ncias
+  # OcorrÍncias
   addCircleMarkers(data = ocor2,
              lng = ~lon, lat = ~lat, radius = 1,
-             group = "Les√£o Corporal", color = "black")%>%
+             group = "Les„o Corporal", color = "black")%>%
   # Layers
   addLayersControl(
     baseGroups = c("OpenStreetMap","Positron","Stamen.Toner","WorldImagery"),
     overlayGroups = c("Apond","IBEU","D1-Mobilidade", "D2-Ambientais","D3-Habitacionais",
-                      "D4-Servi√ßos","D5-Infraestrutura", "Les√£o Corporal"),
+                      "D4-ServiÁos","D5-Infraestrutura", "Les„o Corporal"),
     options = layersControlOptions(collapsed = F)) %>%
   #Legenda
   #addProviderTiles("CartoDB.Positron") %>% # Fixar google maps
@@ -131,6 +130,6 @@ mapa <- leaflet() %>% addTiles() %>%
             labFormat = labelFormat(prefix = "[", suffix = "]", between = ";"))
 mapa
 
-#saveWidget(mapa, "E:/Observat√≥rio 2018/IBEU/MapaIBEU/MapaWebIBEU.html")
+#saveWidget(mapa, "C:/Users/Furriel/Dropbox/IBEU/MapaIBEU/MapaWebIBEU.html")
 
 
