@@ -1,4 +1,4 @@
-> Work of oct, 2017.
+> Work of Oct, 2017.
 
 # IBEUmap
 Mapa interativo do IBEU (leaflet) 2010 para a Região Metropolotana de Maringá
